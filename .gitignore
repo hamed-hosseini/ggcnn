@@ -2,7 +2,6 @@
 __pycache__
 tensorboard
 output
-/data
 
 *.pyc
 

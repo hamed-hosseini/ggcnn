@@ -36,7 +36,7 @@ class Image:
         :param bottom_right: tuple, bottom right pixel
         :param resize: If specified, resize the cropped image to this size
         """
-        self.img = self.img[top_left[0]:bottom_right[0], top_left[1]:bottom_right[1]]
+        self.img = self.img[int(top_left[0]):int(bottom_right[0]), int(top_left[1]):int(bottom_right[1])]
         if resize is not None:
             self.resize(resize)
 
@@ -50,10 +50,14 @@ class Image:
 
     def normalise(self):
         """
-        Normalise the image by converting to float [0,1] and zero-centering
+        Normalise the image by converting to float [0,1]
         """
-        self.img = self.img.astype(np.float32)/255.0
-        self.img -= self.img.mean()
+        min_array = np.repeat(np.min(self.img, axis=(0,1)), self.img.shape[0] * self.img.shape[1]).reshape(3,self.img.shape[0],self.img.shape[1]).transpose(1,2,0)
+        max_array = np.repeat(np.max(self.img, axis=(0,1)), self.img.shape[0] * self.img.shape[1]).reshape(3,self.img.shape[0],self.img.shape[1]).transpose(1,2,0)
+
+        self.img = (self.img.astype(np.float32) - min_array)/(max_array - min_array)
+        # self.img -= self.img.mean()
+        # self.img -= self.img - 144
 
     def resize(self, shape):
         """
@@ -99,6 +103,7 @@ class Image:
         if ax:
             ax.imshow(self.img, **kwargs)
         else:
+            # plt.imshow(self.img.transpose((1, 2, 0)), **kwargs)
             plt.imshow(self.img, **kwargs)
             plt.show()
 
@@ -203,7 +208,8 @@ class DepthImage(Image):
         """
         Normalise by subtracting the mean and clippint [-1, 1]
         """
-        self.img = np.clip((self.img - self.img.mean()), -1, 1)
+        # self.img = np.clip((self.img - self.img.mean()), -1, 1)
+        self.img = self.img - 144
 
 
 class WidthImage(Image):
@@ -222,4 +228,5 @@ class WidthImage(Image):
         """
         Normalise by mapping [0, 150] -> [0, 1]
         """
-        self.img = np.clip(self.img, 0, 150.0)/150.0
+        # self.img = np.clip(self.img, 0, 150.0)/150.0
+        self.img = self.img - 144

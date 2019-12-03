@@ -138,7 +138,6 @@ class GraspRectangles:
             plt.show()
         else:
             self.plot(ax)
-
     def draw(self, shape, position=True, angle=True, width=True):
         """
         Plot all GraspRectangles as solid rectangles in a numpy array, e.g. as network training data.
@@ -182,7 +181,7 @@ class GraspRectangles:
         if pad_to:
            if pad_to > len(self.grs):
                a = np.concatenate((a, np.zeros((pad_to - len(self.grs), 4, 2))))
-        return a.astype(np.int)
+        return a
 
     @property
     def center(self):
@@ -191,7 +190,7 @@ class GraspRectangles:
         :return: float, mean centre of all GraspRectangles
         """
         points = [gr.points for gr in self.grs]
-        return np.mean(np.vstack(points), axis=0).astype(np.int)
+        return np.mean(np.vstack(points), axis=0)
 
 
 class GraspRectangle:
@@ -225,7 +224,7 @@ class GraspRectangle:
         """
         :return: Rectangle center point
         """
-        return self.points.mean(axis=0).astype(np.int)
+        return self.points.mean(axis=0)
 
     @property
     def length(self):
@@ -313,7 +312,10 @@ class GraspRectangle:
             ]
         )
         c = np.array(center).reshape((1, 2))
-        self.points = ((np.dot(R, (self.points - c).T)).T + c).astype(np.int)
+        self.points = ((np.dot(R, (self.points - c).T)).T + c)
+
+    def normalise(self):
+        self.points = self.points / 224
 
     def scale(self, factor):
         """
@@ -345,7 +347,7 @@ class GraspRectangle:
             ]
         )
         c = np.array(center).reshape((1, 2))
-        self.points = ((np.dot(T, (self.points - c).T)).T + c).astype(np.int)
+        self.points = ((np.dot(T, (self.points - c).T)).T + c)
 
 
 class Grasp:
@@ -393,6 +395,22 @@ class Grasp:
             iou = self_gr.iou(gr)
             max_iou = max(max_iou, iou)
         return max_iou
+
+    def get_max_iou_gr(self, grs):
+        """
+        Return maximum IoU between self and a list of GraspRectangles
+        :param grs: List of GraspRectangles
+        :return: Maximum IoU with any of the GraspRectangles
+        """
+        max_gr = None
+        self_gr = self.as_gr
+        max_iou = 0
+        for gr in grs:
+            iou = self_gr.iou(gr)
+            if iou > max_iou:
+                max_gr = gr
+                max_iou = max(max_iou, iou)
+        return max_gr
 
     def plot(self, ax, color=None):
         """

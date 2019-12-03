@@ -3,8 +3,7 @@ opencv-python
 matplotlib
 scikit-image
 imageio
-tensorboardX
-torch==1.0.1
-torchvision==0.2.0
+torch
+torchvision
 torchsummary
-
+tensorboardX

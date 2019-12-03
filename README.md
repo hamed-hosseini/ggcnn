@@ -1,35 +1,35 @@
-**Note:** This is a cleaned-up, PyTorch port of the GG-CNN code.  For the original Keras implementation, see the `RSS2018` branch.  
-Main changes are major code clean-ups and documentation, an improved GG-CNN2 model, ability to use the Jacquard dataset and simpler evaluation.    
+# Real-Time Grasp Detection Using Convolutional Neural Networks
 
 
-# Generative Grasping CNN (GG-CNN)
+This repository contains the implementation of the Real-Time Grasp Detection Using Convolutional Neural Networks from the paper:
 
-The GG-CNN is a lightweight, fully-convolutional network which predicts the quality and pose of antipodal grasps at every pixel in an input depth image.  The lightweight and single-pass generative nature of GG-CNN allows for fast execution and closed-loop control, enabling accurate grasping in dynamic environments where objects are moved during the grasp attempt.
+**Real-Time Grasp Detection Using Convolutional Neural Networks**
 
-This repository contains the implementation of the Generative Grasping Convolutional Neural Network (GG-CNN) from the paper:
+*[Joseph Redmon](https://pjreddie.com/), [Anelia Angelova](http://www.vision.caltech.edu/anelia/)
 
-**Closing the Loop for Robotic Grasping: A Real-time, Generative Grasp Synthesis Approach**
+International Conference on Robotics and Automation (ICRA) 2015
 
-*[Douglas Morrison](http://dougsm.com), [Peter Corke](http://petercorke.com), [Jürgen Leitner](http://juxi.net)*
-
-Robotics: Science and Systems (RSS) 2018
-
-[arXiv](https://arxiv.org/abs/1804.05172) | [Video](https://www.youtube.com/watch?v=7nOoxuGEcxA)
+[arXiv](https://arxiv.org/abs/1412.3128)
 
 If you use this work, please cite:
 
 ```text
-@inproceedings{morrison2018closing,
-	title={{Closing the Loop for Robotic Grasping: A Real-time, Generative Grasp Synthesis Approach}},
-	author={Morrison, Douglas and Corke, Peter and Leitner, J\"urgen},
-	booktitle={Proc.\ of Robotics: Science and Systems (RSS)},
-	year={2018}
+@article{Redmon_2015,
+   title={Real-time grasp detection using convolutional neural networks},
+   ISBN={9781479969234},
+   url={http://dx.doi.org/10.1109/ICRA.2015.7139361},
+   DOI={10.1109/icra.2015.7139361},
+   journal={2015 IEEE International Conference on Robotics and Automation (ICRA)},
+   publisher={IEEE},
+   author={Redmon, Joseph and Angelova, Anelia},
+   year={2015},
+   month={May}
 }
 ```
 
 **Contact**
 
-Any questions or comments contact [Doug Morrison](mailto:doug.morrison@roboticvision.org).
+Any questions or comments contact [Hamed Hosseini](hosseini.hamed@ut.ac.ir).
 
 ## Installation
 

@@ -14,7 +14,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchsummary import summary
 
-import tensorboardX
+# import tensorboardX
 
 from utils.visualisation.gridshow import gridshow
 

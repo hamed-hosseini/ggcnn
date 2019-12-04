@@ -32,7 +32,7 @@ time = 'alex_net_18_depth_test'
 class Args():
   network= 'ggcnn'
   dataset = 'cornell'
-  dataset_path = "/home/taarlab-ros/Desktop/cornell_dataset"
+  dataset_path = r"C:\Users\ASUS ZENBOOK\Desktop\cornell_dataset"
   use_rgb = True
   use_depth = True
   split = 0.9

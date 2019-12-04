@@ -204,12 +204,13 @@ class DepthImage(Image):
 
         return DepthImage(grad_x), DepthImage(grad_y), DepthImage(grad)
 
-    def normalise(self):
-        """
-        Normalise by subtracting the mean and clippint [-1, 1]
-        """
-        # self.img = np.clip((self.img - self.img.mean()), -1, 1)
-        self.img = self.img - 144
+    def normalise(self, min_depth, max_depth):
+
+        min_array = np.repeat(min_depth, self.img.shape[0] * self.img.shape[1]).reshape(self.img.shape[0],self.img.shape[1])
+        max_array = np.repeat(max_depth, self.img.shape[0] * self.img.shape[1]).reshape(self.img.shape[0],self.img.shape[1])
+        self.img = (self.img.astype(np.float32) - min_array) / (max_array - min_array)
+        return self.img
+
 
 
 class WidthImage(Image):

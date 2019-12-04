@@ -1,6 +1,6 @@
 import os
 import glob
-
+import numpy as np
 from .grasp_data import GraspDatasetBase
 from utils.dataset_processing import grasp, image
 
@@ -36,6 +36,16 @@ class CornellDataset(GraspDatasetBase):
         self.depth_files = depthf[int(l*start):int(l*end)]
         self.rgb_files = rgbf[int(l*start):int(l*end)]
 
+        self.max_depth = 0
+        self.min_depth = 2
+        for file in depthf:
+            depth_img = image.DepthImage.from_tiff(file)
+            if np.max(depth_img.img) > self.max_depth:
+                self.max_depth = np.max(depth_img.img)
+            if np.min(depth_img) < self.min_depth:
+                self.min_depth = np.min(depth_img.img)
+
+
     def _get_crop_attrs(self, idx):
         gtbbs = grasp.GraspRectangles.load_from_cornell_file(self.grasp_files[idx])
         center = gtbbs.center
@@ -58,7 +68,7 @@ class CornellDataset(GraspDatasetBase):
         center, left, top = self._get_crop_attrs(idx)
         depth_img.rotate(rot, center)
         depth_img.crop((top, left), (min(480, top + self.output_size), min(640, left + self.output_size)))
-        # depth_img.normalise()
+        depth_img.normalise(self.min_depth, self.max_depth)
         depth_img.zoom(zoom)
         depth_img.resize((self.output_size, self.output_size))
         return depth_img.img

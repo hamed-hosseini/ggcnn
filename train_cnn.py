@@ -27,12 +27,13 @@ logging.basicConfig(level=logging.INFO)
 
 from utils.visualisation.gridshow import show_image
 from datetime import datetime as dtime
+save_folder = 'saved'
 now = dtime.now()
 time = 'alex_net_18_depth_test'
 class Args():
   network= 'ggcnn'
   dataset = 'cornell'
-  dataset_path = r"C:\Users\ASUS ZENBOOK\Desktop\cornell_dataset"
+  dataset_path = r"/home/taarlab-ros/Desktop/cornell_dataset"
   use_rgb = True
   use_depth = True
   split = 0.9
@@ -78,7 +79,7 @@ def parse_args():
     return args
 
 
-def validate(net, device, val_data, batches_per_epoch, epoch, val_losses):
+def validate(net, device, val_data, batches_per_epoch, epoch):
     """
     Run validation.
     :param net: Network
@@ -114,7 +115,7 @@ def validate(net, device, val_data, batches_per_epoch, epoch, val_losses):
                 yc = y.to(device)
                 pred = net(xc)
                 loss = F.mse_loss(pred, yc)
-                results['loss'] += loss.item()/ld
+                results['loss'] += loss.item()
 
                 s = evaluation.calculate_iou_match_hamed(pred, val_data.dataset.get_gtbb(didx, rot, zoom_factor, normalise=False))
 
@@ -123,14 +124,14 @@ def validate(net, device, val_data, batches_per_epoch, epoch, val_losses):
                 else:
                     results['failed'] += 1
 
-                if batch_idx % 10 == 0:
-                    logging.info('Batch: {}, Loss: {:0.4f}'.format(batch_idx, F.mse_loss(pred, yc)))
-                    val_losses.append(F.mse_loss(pred, yc).item())
+                if batch_idx % 100 == 0:
+                #     logging.info('Batch: {}, Loss: {:0.4f}'.format(batch_idx, F.mse_loss(pred, yc)))
+                #     val_losses.append(F.mse_loss(pred, yc).item())
                     show_image(xc, yc, pred, val_data, didx, rot, zoom_factor, epoch, batch_idx, time, 'validation',  True)
                 # print('pred', pred)
                 #printing Loss_validation
                 # print('vallos:', F.mse_loss(pred, yc))
-    return results, val_losses
+    return results
 
 
 def train(epoch, net, device, train_data, optimizer, batches_per_epoch, losses, time, vis=False):
@@ -232,28 +233,31 @@ def run():
     # net = ggcnn(input_channels = input_channels)
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     print(device)
+    if not os.path.exists('saved/model'):
+        # n_inputs = 1000
+        from torchvision import models
+        net = models.alexnet(pretrained=True)
 
-    # n_inputs = 1000
-    from torchvision import models
-    net = models.alexnet(pretrained=True)
-
-    # Freeze model weights
-    for param in net.parameters():
-        param.requires_grad = False
-    # Add on classifier
-    # print('++++++++++\n',net, '++++++++++++++++\n')
-    net.classifier = nn.Sequential(
-        nn.Linear(9216, 512),
-        nn.Tanh(),
-        nn.Dropout(0.5),
-        nn.Linear(512, 512),
-        nn.Tanh(),
-        nn.Dropout(0.5),
-        nn.Linear(512, 6),
-        nn.Tanh()
-        )
-    # print(net)
-    # net.classifier[6].requires_grad = True
+        # Freeze model weights
+        for param in net.parameters():
+            param.requires_grad = False
+        # Add on classifier
+        # print('++++++++++\n',net, '++++++++++++++++\n')
+        net.classifier = nn.Sequential(
+            nn.Linear(9216, 512),
+            nn.Tanh(),
+            nn.Dropout(0.5),
+            nn.Linear(512, 512),
+            nn.Tanh(),
+            nn.Dropout(0.5),
+            nn.Linear(512, 6),
+            nn.Tanh()
+            )
+        # print(net)
+        # net.classifier[6].requires_grad = True
+    else:
+        print('Loading Model')
+        net = torch.load('saved/model')
     net = net.to(device)
     # optimizer = optim.Adam(net.parameters(), lr=0.05)
     optimizer = optim.Adam(net.parameters(), lr=0.0005)
@@ -282,7 +286,9 @@ def run():
 
         # Run Validation
         logging.info('Validating...')
-        test_results, val_losses = validate(net, device, val_data, args.batches_per_epoch, epoch, val_losses)
+        test_results = validate(net, device, val_data, 1000, epoch)
+        logging.info('Loss: {:0.4f}'.format(np.mean(test_results['loss'])))
+        val_losses += np.mean(test_results['loss'])
         logging.info('%d/%d = %f' % (test_results['correct'], test_results['correct'] + test_results['failed'],
                                      test_results['correct']/(test_results['correct'] + test_results['failed'])))
 
@@ -295,15 +301,16 @@ def run():
         # Save best performing network
         iou = test_results['correct'] / (test_results['correct'] + test_results['failed'])
         # if iou > best_iou or epoch == 0 or (epoch % 10) == 0:
-        #     torch.save(net, os.path.join(save_folder, 'epoch_%02d_iou_%0.2f' % (epoch, iou)))
-        #     best_iou = iou
-    fig = plt.figure()
-    ax = fig.add_subplot(211)
-    ax.title.set_text('train_loss')
-    ax.plot(train_losses)
-    ax = fig.add_subplot(212)
-    ax.plot(val_losses)
-    ax.title.set_text('val_loss')
-    plt.savefig('total_Losses')
+        torch.save(net, os.path.join(save_folder, 'model'))
+        # best_iou = iou
+        fig = plt.figure()
+        ax = fig.add_subplot(211)
+        ax.title.set_text('train_loss')
+        ax.plot(train_losses)
+        ax = fig.add_subplot(212)
+        ax.plot(val_losses)
+        ax.title.set_text('val_loss')
+        plt.savefig('total_Losses')
+        plt.close(fig)
 if __name__ == '__main__':
     run()

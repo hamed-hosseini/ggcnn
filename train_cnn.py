@@ -29,7 +29,7 @@ from utils.visualisation.gridshow import show_image
 from datetime import datetime as dtime
 save_folder = 'saved'
 now = dtime.now()
-time = 'alex_net_18_depth_test'
+time = 'test'
 class Args():
   network= 'ggcnn'
   dataset = 'cornell'
@@ -115,7 +115,8 @@ def validate(net, device, val_data, batches_per_epoch, epoch):
                 yc = y.to(device)
                 pred = net(xc)
                 loss = F.mse_loss(pred, yc)
-                results['loss'] += loss.item()
+                print(loss)
+                results['loss'] += loss.item() / ld
 
                 s = evaluation.calculate_iou_match_hamed(pred, val_data.dataset.get_gtbb(didx, rot, zoom_factor, normalise=False))
 
@@ -279,11 +280,6 @@ def run():
         logging.info('Beginning Epoch {:02d}'.format(epoch))
         train_results, train_losses = train(epoch, net, device, train_data, optimizer, args.batches_per_epoch, train_losses, time,  vis=args.vis)
 
-        # Log training losses to tensorboard
-        # tb.add_scalar('loss/train_loss', train_results['loss'], epoch)
-        # for n, l in train_results['losses'].items():
-        #     tb.add_scalar('train_loss/' + n, l, epoch)
-
         # Run Validation
         logging.info('Validating...')
         test_results = validate(net, device, val_data, 1000, epoch)
@@ -292,11 +288,6 @@ def run():
         logging.info('%d/%d = %f' % (test_results['correct'], test_results['correct'] + test_results['failed'],
                                      test_results['correct']/(test_results['correct'] + test_results['failed'])))
 
-        # Log validation results to tensorbaord
-        # tb.add_scalar('loss/IOU', test_results['correct'] / (test_results['correct'] + test_results['failed']), epoch)
-        # tb.add_scalar('loss/val_loss', test_results['loss'], epoch)
-        # for n, l in test_results['losses'].items():
-        #     tb.add_scalar('val_loss/' + n, l, epoch)
 
         # Save best performing network
         iou = test_results['correct'] / (test_results['correct'] + test_results['failed'])

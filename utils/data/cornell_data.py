@@ -18,7 +18,7 @@ class CornellDataset(GraspDatasetBase):
         :param kwargs: kwargs for GraspDatasetBase
         """
         super(CornellDataset, self).__init__(**kwargs)
-        print('this is file path:', file_path)
+        # print('this is file path:', file_path)
         graspf = glob.glob(os.path.join(file_path, '*', 'pcd*cpos.txt'))
         graspf.sort()
         print('....', graspf)

@@ -29,7 +29,7 @@ from utils.visualisation.gridshow import show_image
 from datetime import datetime as dtime
 save_folder = 'saved'
 now = dtime.now()
-time = 'test'
+time = 'resnet150'
 class Args():
   network= 'ggcnn'
   dataset = 'cornell'
@@ -115,7 +115,7 @@ def validate(net, device, val_data, batches_per_epoch, epoch):
                 yc = y.to(device)
                 pred = net(xc)
                 loss = F.mse_loss(pred, yc)
-                print(loss)
+                # print(loss)
                 results['loss'] += loss.item() / ld
 
                 s = evaluation.calculate_iou_match_hamed(pred, val_data.dataset.get_gtbb(didx, rot, zoom_factor, normalise=False))
@@ -237,15 +237,15 @@ def run():
     if not os.path.exists('saved/model'):
         # n_inputs = 1000
         from torchvision import models
-        net = models.alexnet(pretrained=True)
-
+        net = models.resnet152(pretrained=True)
+        print(net)
         # Freeze model weights
         for param in net.parameters():
             param.requires_grad = False
         # Add on classifier
         # print('++++++++++\n',net, '++++++++++++++++\n')
-        net.classifier = nn.Sequential(
-            nn.Linear(9216, 512),
+        net.fc = nn.Sequential(
+            nn.Linear(2048, 512),
             nn.Tanh(),
             nn.Dropout(0.5),
             nn.Linear(512, 512),
@@ -284,7 +284,7 @@ def run():
         logging.info('Validating...')
         test_results = validate(net, device, val_data, 1000, epoch)
         logging.info('Loss: {:0.4f}'.format(np.mean(test_results['loss'])))
-        val_losses += np.mean(test_results['loss'])
+        val_losses += [np.mean(test_results['loss'])]
         logging.info('%d/%d = %f' % (test_results['correct'], test_results['correct'] + test_results['failed'],
                                      test_results['correct']/(test_results['correct'] + test_results['failed'])))
 
@@ -301,7 +301,7 @@ def run():
         ax = fig.add_subplot(212)
         ax.plot(val_losses)
         ax.title.set_text('val_loss')
-        plt.savefig('total_Losses')
+        plt.savefig(os.path.join(time, 'total_loss'))
         plt.close(fig)
 if __name__ == '__main__':
     run()

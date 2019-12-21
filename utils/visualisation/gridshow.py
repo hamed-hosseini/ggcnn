@@ -85,8 +85,8 @@ def show_image(x, y, pred, data, didx, rot, zoom_factor,epoch, batch_idx, time, 
 
     ax = fig.add_subplot(312)
     ax.set_title('target')
-    ax.text(1, 1, 'rot={0}\n, zoom_factor={1}\n '.format(rot, zoom_factor), style='italic'
-            )
+    # ax.text(1, 1, 'rot={0}\n, zoom_factor={1}\n '.format(rot, zoom_factor), style='italic'
+    #         )
     # gtbbs = data.dataset.get_gtbb(didx, rot, zoom_factor)
     # gtbbs.show(ax)
 

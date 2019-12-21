@@ -29,7 +29,7 @@ from utils.visualisation.gridshow import show_image
 from datetime import datetime as dtime
 save_folder = 'saved'
 now = dtime.now()
-time = 'resnet150'
+time = 'vgg19_new'
 class Args():
   network= 'ggcnn'
   dataset = 'cornell'
@@ -237,15 +237,15 @@ def run():
     if not os.path.exists('saved/model'):
         # n_inputs = 1000
         from torchvision import models
-        net = models.resnet152(pretrained=True)
+        net = models.vgg19(pretrained=True)
         print(net)
         # Freeze model weights
         for param in net.parameters():
             param.requires_grad = False
         # Add on classifier
         # print('++++++++++\n',net, '++++++++++++++++\n')
-        net.fc = nn.Sequential(
-            nn.Linear(2048, 512),
+        net.classifier = nn.Sequential(
+            nn.Linear(25088, 512),
             nn.Tanh(),
             nn.Dropout(0.5),
             nn.Linear(512, 512),

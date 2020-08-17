@@ -1,6 +1,6 @@
 # Improving the Successful Robotic GraspDetection on Convolutional Neural Networks
 
-![problem statement1](pics/problem_statement1.png)
+![problem statement](pics/problem_statement1.png =10x10)
 This repository contains the implementation of the Improving the Successful Robotic GraspDetection on Convolutional Neural Networks from the paper:
 
 **Improving the Successful Robotic GraspDetection on Convolutional Neural Networks**

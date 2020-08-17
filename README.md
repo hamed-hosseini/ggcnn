@@ -1,13 +1,14 @@
-# Real-Time Grasp Detection Using Convolutional Neural Networks
+# Improving the Successful Robotic GraspDetection on Convolutional Neural Networks
 
 
-This repository contains the implementation of the Real-Time Grasp Detection Using Convolutional Neural Networks from the paper:
+This repository contains the implementation of the Improving the Successful Robotic GraspDetection on Convolutional Neural Networks from the paper:
 
-**Real-Time Grasp Detection Using Convolutional Neural Networks**
+**Improving the Successful Robotic GraspDetection on Convolutional Neural Networks**
 
-*[Joseph Redmon](https://pjreddie.com/), [Anelia Angelova](http://www.vision.caltech.edu/anelia/)
+*[Hamed Hosseini](www.linkedin.com/in/hamed-hosseini), [Mehdi Tale Masouleh](https://scholar.google.com/citations?user=gkiFy20AAAAJ&hl=en), [Ahmad Kalhor](https://scholar.google.com/citations?user=m7xdmMgAAAAJ&hl=en)
 
-International Conference on Robotics and Automation (ICRA) 2015
+<!-- a normal html comment -->
+<!--International Conference on Robotics and Automation (ICRA) 2015
 
 [arXiv](https://arxiv.org/abs/1412.3128)
 
@@ -26,7 +27,7 @@ If you use this work, please cite:
    month={May}
 }
 ```
-
+-->
 **Contact**
 
 Any questions or comments contact [Hamed Hosseini](hosseini.hamed@ut.ac.ir).

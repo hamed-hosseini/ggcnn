@@ -1,6 +1,10 @@
 # Improving the Successful Robotic GraspDetection on Convolutional Neural Networks
 
-![problem statement](https://github.com/hamed-hosseini/ggcnn/blob/master/pics/problem_statement1.png =10x10)
+<!-- ![problem statement](https://github.com/hamed-hosseini/ggcnn/blob/master/pics/problem_statement1.png =10x10)-->
+<div align="middle">
+<img src="https://github.com/hamed-hosseini/ggcnn/blob/master/pics/problem_statement1.png" height="300">
+</div>
+
 This repository contains the implementation of the Improving the Successful Robotic GraspDetection on Convolutional Neural Networks from the paper:
 
 **Improving the Successful Robotic GraspDetection on Convolutional Neural Networks**

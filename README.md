@@ -73,6 +73,7 @@ Training Figures:
 <div align="center">
 <img src="https://github.com/hamed-hosseini/ggcnn/blob/master/pics/total_loss.png" height="300">
 </div>
+
 ## Evaluation/Visualisation
 
 Predictions are:
